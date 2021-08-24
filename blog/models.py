@@ -19,7 +19,7 @@ class Article(models.Model):
 
     title = models.TextField(max_length=1024,blank=False)
  
-    tag = models.ManyToManyField(Tag,blank=True)
+    tag = models.ManyToManyField(Tag,blank=False)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=False)
 
     markdown = models.TextField(null=True, blank=True)
