@@ -8,8 +8,8 @@ class Command(BaseCommand):
     
     def handle(self, *args, **kwargs):
         fake = Faker()
-        
-        for _ in range(200):
+        number_of_entry_to_generate = 200
+        for _ in range(number_of_entry_to_generate):
             
             article = Article.objects.create(
                     title = fake.paragraph(nb_sentences=2),
@@ -24,6 +24,8 @@ class Command(BaseCommand):
 
             article.tag.add(tag1,tag2)
             article.save()
+            completion = round((_/number_of_entry_to_generate)*100)
+            print(f"{completion}%")
 
 
 readme = """
