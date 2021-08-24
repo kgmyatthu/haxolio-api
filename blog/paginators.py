@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from collections import OrderedDict
 
 class CustomPagination(pagination.PageNumberPagination):
-    page_size = 25
+    page_size = 50
     page_size_query_param = 'per_page'
-    max_page_size = 500
+    max_page_size = 100
     page_query_param = 'page'
 
 def get_paginated_response(self, data):
