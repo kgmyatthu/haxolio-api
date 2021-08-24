@@ -22,7 +22,7 @@ def api_get_article_detail(request, slug):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
-def api_get_articles(request):
+def api_get_paginated_articles(request):
     try:
         article = Article.objects.all()
 
@@ -32,6 +32,17 @@ def api_get_articles(request):
 
             serializer = ArticleSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
+
+    except Article.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def api_get_all_articles(request):
+    try:
+        article = Article.objects.all()
+        if len(article) > 0:
+            serializer = ArticleSerializer(article, many=True)
+            return Response(serializer.data)
 
     except Article.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
