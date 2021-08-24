@@ -7,6 +7,10 @@ class Tag(models.Model):
         app_label = 'blog'
     name=models.CharField(max_length=30,blank=False,unique=True)
 
+
+
+class Category(models.Model):
+    name = name=models.CharField(max_length=30,blank=False,unique=True)
     def __str__(self):
         return self.name
 
@@ -14,7 +18,10 @@ class Tag(models.Model):
 class Article(models.Model):
 
     title = models.TextField(max_length=1024,blank=False)
+ 
     tag = models.ManyToManyField(Tag,blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=False)
+
     markdown = models.TextField(null=True, blank=True)
 
     unique_slug = models.SlugField(max_length=2048,unique=True, null=False,editable=False)
