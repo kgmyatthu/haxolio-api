@@ -24,7 +24,7 @@ def api_get_article_detail(request, slug):
 @api_view(['GET'])
 def api_get_paginated_articles(request):
     try:
-        article = Article.objects.all()
+        article = Article.objects.all().order_by("-updated_at")
 
         if len(article) > 0:
             paginator = CustomPagination()
