@@ -13,16 +13,16 @@ from django.contrib.postgres.search import SearchVector
 def api_get_article_detail(request, slug):
     if request.method == "GET":
         try:
-            article = Article.objects.get(unique_slug=slug)
+            article = Article.objects.get(unique_slug=slug,published=True)
             serializer = ArticleSerializer(article)
             return Response(serializer.data)
-        except Article.DoesNotExist:
+        except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def api_get_paginated_articles(request):
     try:
-        article = Article.objects.all().order_by("-updated_at")
+        article = Article.objects.filter(published=True).order_by("-updated_at")
 
         if len(article) > 0:
             paginator = CustomPagination()
@@ -31,18 +31,18 @@ def api_get_paginated_articles(request):
             serializer = ArticleSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
 
-    except Article.DoesNotExist:
+    except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def api_get_all_articles(request):
     try:
-        article = Article.objects.all()
+        article = Article.objects.filter(published=True)
         if len(article) > 0:
             serializer = ArticleSerializer(article, many=True)
             return Response(serializer.data)
 
-    except Article.DoesNotExist:
+    except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
@@ -50,10 +50,10 @@ def api_get_search_articles(request,keyword):
     try:
         article = Article.objects.annotate(
             search=SearchVector("title", "category__name")
-        ).filter(search=keyword)
+        ).filter(search=keyword,published=True)
         if len(article) > 0:
             serializer = ArticleSerializer(article, many=True)
             return Response(serializer.data)
 
-    except Article.DoesNotExist:
+    except:
         return Response(status=status.HTTP_404_NOT_FOUND)
