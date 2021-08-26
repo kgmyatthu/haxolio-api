@@ -7,9 +7,7 @@ from .paginators import CustomPagination
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-# from rest_framework.generics import ListAPIView
-
-# Create your views here.
+from django.contrib.postgres.search import SearchVector
 
 @api_view(['GET'])
 def api_get_article_detail(request, slug):
@@ -40,6 +38,19 @@ def api_get_paginated_articles(request):
 def api_get_all_articles(request):
     try:
         article = Article.objects.all()
+        if len(article) > 0:
+            serializer = ArticleSerializer(article, many=True)
+            return Response(serializer.data)
+
+    except Article.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def api_get_search_articles(request,keyword):
+    try:
+        article = Article.objects.annotate(
+            search=SearchVector("title", "category__name")
+        ).filter(search=keyword)
         if len(article) > 0:
             serializer = ArticleSerializer(article, many=True)
             return Response(serializer.data)
