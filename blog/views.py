@@ -49,7 +49,7 @@ def api_get_all_articles(request):
 def api_get_search_articles(request,keyword):
     try:
         article = Article.objects.annotate(
-            search=SearchVector("title", "category__name")
+            search=SearchVector("title", "category__name", "tag__name")
         ).filter(search=keyword,published=True)
         if len(article) > 0:
             serializer = ArticleSerializer(article, many=True)
