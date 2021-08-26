@@ -7,7 +7,7 @@ from .paginators import CustomPagination
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 @api_view(['GET'])
 def api_get_article_detail(request, slug):
@@ -50,7 +50,7 @@ def api_get_search_articles(request,keyword):
     try:
         article = Article.objects.annotate(
             search=SearchVector("title", "category__name", "tag__name")
-        ).filter(search=keyword,published=True)
+        ).filter(search=keyword,published=True).distinct('unique_slug')
         if len(article) > 0:
             serializer = ArticleSerializer(article, many=True)
             return Response(serializer.data)
