@@ -85,8 +85,12 @@ DATABASES = {}
 if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': get_KEY("DB_NAME_DEV"),
+            'HOST': get_KEY("DB_HOST_DEV"),
+            'PORT': int(get_KEY("DB_PORT_DEV")),
+            'USER': get_KEY("DB_USER_DEV"),
+            'PASSWORD': get_KEY("DB_PASSWORD_DEV"),
         }
     }
 else:
