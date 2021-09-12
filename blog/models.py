@@ -39,7 +39,7 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         unique_slug = slugify(self.title)
         num = 1
-        while Article.objects.filter(unique_slug=unique_slug).exists():
+        while Article.objects.filter(unique_slug=unique_slug).exists() and Article.objects.get(unique_slug=unique_slug).id is not self.id:
             unique_slug = f'{unique_slug}-{num}'
             num += 1
         self.unique_slug = unique_slug
